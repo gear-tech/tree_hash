@@ -1,3 +1,5 @@
+#![cfg_attr(not(feature = "std"), no_std)]
+
 pub mod impls;
 mod merkle_hasher;
 mod merkleize_padded;
