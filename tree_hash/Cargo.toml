@@ -12,7 +12,7 @@ categories = ["cryptography::cryptocurrencies"]
 
 [dependencies]
 ethereum-types = { version = "0.14.1", default-features = false, features = ["ethbloom", "rlp"] }
-ethereum_hashing = "0.6.0"
+ethereum_hashing = { git = "https://github.com/gear-tech/ethereum_hashing.git", branch = "gear-v0.6.0", default-features = false, features = ["zero_hash_cache"] }
 smallvec = "1.6.1"
 
 [dev-dependencies]
@@ -23,5 +23,5 @@ ethereum_ssz_derive = "0.5"
 
 [features]
 default = ["std"]
-std = ["ethereum-types/std"]
+std = ["ethereum-types/std", "ethereum_hashing/std"]
 arbitrary = ["ethereum-types/arbitrary"]
