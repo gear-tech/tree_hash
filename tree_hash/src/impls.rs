@@ -1,5 +1,7 @@
 use super::*;
 use ethereum_types::{H160, H256, U128, U256};
+
+#[cfg(feature = "std")]
 use std::sync::Arc;
 
 fn int_to_hash256(int: u64) -> Hash256 {
@@ -187,6 +189,7 @@ impl TreeHash for H256 {
     }
 }
 
+#[cfg(feature = "std")]
 impl<T: TreeHash> TreeHash for Arc<T> {
     fn tree_hash_type() -> TreeHashType {
         T::tree_hash_type()

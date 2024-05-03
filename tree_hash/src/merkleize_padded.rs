@@ -1,5 +1,12 @@
 use super::{get_zero_hash, Hash256, BYTES_PER_CHUNK};
 use ethereum_hashing::{hash32_concat, hash_fixed};
+use core::cmp;
+
+#[cfg(not(feature = "std"))]
+extern crate alloc;
+
+#[cfg(not(feature = "std"))]
+use alloc::{vec, vec::Vec};
 
 /// Merkleize `bytes` and return the root, optionally padding the tree out to `min_leaves` number of
 /// leaves.
@@ -52,10 +59,10 @@ pub fn merkleize_padded(bytes: &[u8], min_leaves: usize) -> Hash256 {
     //
     // Since there is more than one node in this tree (see prior assertion), there should always be
     // one or more initial parent nodes.
-    let initial_parents_with_values = std::cmp::max(1, next_even_number(leaves_with_values) / 2);
+    let initial_parents_with_values = cmp::max(1, next_even_number(leaves_with_values) / 2);
 
     // The number of leaves in the full tree (including padding nodes).
-    let num_leaves = std::cmp::max(leaves_with_values, min_leaves).next_power_of_two();
+    let num_leaves = cmp::max(leaves_with_values, min_leaves).next_power_of_two();
 
     // The number of levels in the tree.
     //
@@ -313,7 +320,7 @@ mod test {
     fn test_against_reference(input: &[u8], min_nodes: usize) {
         let mut reference_input = input.to_vec();
         reference_input.resize(
-            std::cmp::max(
+            cmp::max(
                 reference_input.len(),
                 min_nodes.next_power_of_two() * BYTES_PER_CHUNK,
             ),

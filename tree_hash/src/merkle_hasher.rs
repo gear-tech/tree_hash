@@ -1,7 +1,7 @@
 use crate::{get_zero_hash, Hash256, HASHSIZE};
 use ethereum_hashing::{Context, Sha256Context, HASH_LEN};
 use smallvec::{smallvec, SmallVec};
-use std::mem;
+use core::{cmp, mem};
 
 type SmallVec8<T> = SmallVec<[T; 8]>;
 
@@ -200,7 +200,7 @@ impl MerkleHasher {
     pub fn write(&mut self, bytes: &[u8]) -> Result<(), Error> {
         let mut ptr = 0;
         while ptr <= bytes.len() {
-            let slice = &bytes[ptr..std::cmp::min(bytes.len(), ptr + HASHSIZE)];
+            let slice = &bytes[ptr..cmp::min(bytes.len(), ptr + HASHSIZE)];
 
             if self.buffer.is_empty() && slice.len() == HASHSIZE {
                 self.process_leaf(slice)?;

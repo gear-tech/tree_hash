@@ -1,6 +1,12 @@
 use super::*;
 use ethereum_hashing::hash;
 
+#[cfg(not(feature = "std"))]
+extern crate alloc;
+
+#[cfg(not(feature = "std"))]
+use alloc::{vec, vec::Vec};
+
 /// Merkleizes bytes and returns the root, using a simple algorithm that does not optimize to avoid
 /// processing or storing padding bytes.
 ///
@@ -30,7 +36,7 @@ pub fn merkleize_standard(bytes: &[u8]) -> Hash256 {
     let nodes = num_nodes(leaves);
     let internal_nodes = nodes - leaves;
 
-    let num_bytes = std::cmp::max(internal_nodes, 1) * HASHSIZE + bytes.len();
+    let num_bytes = core::cmp::max(internal_nodes, 1) * HASHSIZE + bytes.len();
 
     let mut o: Vec<u8> = vec![0; internal_nodes * HASHSIZE];
 

@@ -9,6 +9,7 @@ pub use merkle_hasher::{Error, MerkleHasher};
 pub use merkleize_padded::merkleize_padded;
 pub use merkleize_standard::merkleize_standard;
 
+use core::{cmp, mem};
 use ethereum_hashing::{hash_fixed, ZERO_HASHES, ZERO_HASHES_MAX_INDEX};
 use smallvec::SmallVec;
 
@@ -25,7 +26,7 @@ pub type PackedEncoding = SmallVec<[u8; SMALLVEC_SIZE]>;
 ///
 /// `minimum_leaf_count` will only be used if it is greater than or equal to the minimum number of leaves that can be created from `bytes`.
 pub fn merkle_root(bytes: &[u8], minimum_leaf_count: usize) -> Hash256 {
-    let leaves = std::cmp::max(
+    let leaves = cmp::max(
         (bytes.len() + (HASHSIZE - 1)) / HASHSIZE,
         minimum_leaf_count,
     );
@@ -61,7 +62,7 @@ pub fn merkle_root(bytes: &[u8], minimum_leaf_count: usize) -> Hash256 {
 ///
 /// Used in `TreeHash` for inserting the length of a list above it's root.
 pub fn mix_in_length(root: &Hash256, length: usize) -> Hash256 {
-    let usize_len = std::mem::size_of::<usize>();
+    let usize_len = mem::size_of::<usize>();
 
     let mut length_bytes = [0; BYTES_PER_CHUNK];
     length_bytes[0..usize_len].copy_from_slice(&length.to_le_bytes());
